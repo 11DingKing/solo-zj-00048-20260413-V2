@@ -3,13 +3,25 @@ from datetime import datetime
 from uuid import UUID, uuid4
 from beanie import Document, Indexed, Link, before_event, Replace, Insert
 from pydantic import Field
+from enum import Enum
 from .user_model import User
+
+
+class Priority(str, Enum):
+    urgent = "urgent"
+    high = "high"
+    normal = "normal"
+    low = "low"
+
 
 class Todo(Document):
     todo_id: UUID = Field(default_factory=uuid4, unique=True)
     status: bool = False
     title: Indexed(str)
     description: str = None
+    priority: Priority = Priority.normal
+    due_date: Optional[datetime] = None
+    assignee_id: Optional[UUID] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     owner: Link[User]

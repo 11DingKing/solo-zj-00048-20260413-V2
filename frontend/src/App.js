@@ -14,6 +14,7 @@ import { TodoDetail } from "./components/Todo/TodoDetail";
 import { TodoList } from "./components/Todo/TodoList";
 import { SharedTodoList } from "./components/Todo/SharedTodoList";
 import { SharedTodoDetail } from "./components/Todo/SharedTodoDetail";
+import { Dashboard } from "./components/Dashboard/Dashboard";
 import { AuthConsumer, AuthProvider } from "./context/JWTAuthContext";
 
 function App() {
@@ -56,6 +57,14 @@ function App() {
                     }
                   />
                   <Route path="/" element={<NavBar />}>
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <Authenticated>
+                          <Dashboard />
+                        </Authenticated>
+                      }
+                    />
                     <Route
                       path="/"
                       element={

@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, HTTPException, status
 from app.schemas.user_schema import UserAuth, UserOut, UserUpdate
 from fastapi import Depends
@@ -24,6 +25,12 @@ async def create_user(data: UserAuth):
 @user_router.get('/me', summary='Get details of currently logged in user', response_model=UserOut)
 async def get_me(user: User = Depends(get_current_user)):
     return user
+
+
+@user_router.get('/list', summary='Get all users', response_model=List[UserOut])
+async def list_users(user: User = Depends(get_current_user)):
+    users = await UserService.list_users()
+    return users
 
 
 @user_router.post('/update', summary='Update User', response_model=UserOut)

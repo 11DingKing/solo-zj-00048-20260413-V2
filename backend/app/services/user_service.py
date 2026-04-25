@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 from app.schemas.user_schema import UserAuth
 from app.models.user_model import User
@@ -47,3 +47,8 @@ class UserService:
     
         await user.update({"$set": data.dict(exclude_unset=True)})
         return user
+    
+    @staticmethod
+    async def list_users() -> List[User]:
+        users = await User.find_all().to_list()
+        return users

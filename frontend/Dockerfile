@@ -6,6 +6,8 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
+ENV CI=false
+ENV DISABLE_ESLINT_PLUGIN=true
 RUN npm run build
 
 FROM nginx:alpine

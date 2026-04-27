@@ -20,6 +20,9 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const navBg = useColorModeValue("green.300", "green.600");
+  const tabListBg = useColorModeValue("gray.100", "gray.700");
+
   const isDashboard = location.pathname === "/dashboard";
   const isShared = location.pathname === "/shared" || location.pathname.startsWith("/shared/");
   const isTodoList = location.pathname === "/" || (location.pathname.startsWith("/") && !isDashboard && !isShared && !location.pathname.startsWith("/login") && !location.pathname.startsWith("/register"));
@@ -37,7 +40,7 @@ export const NavBar = () => {
         justify="space-between"
         wrap="wrap"
         padding="1rem"
-        bg={useColorModeValue("green.300", "green.600")}
+        bg={navBg}
         color="white"
       >
         <HStack spacing={6}>
@@ -98,7 +101,7 @@ export const NavBar = () => {
             }
           }}
         >
-          <TabList bg={useColorModeValue("gray.100", "gray.700")} px={4}>
+          <TabList bg={tabListBg} px={4}>
             <Tab fontWeight="medium">My Todos</Tab>
             <Tab fontWeight="medium">Shared with Me</Tab>
           </TabList>

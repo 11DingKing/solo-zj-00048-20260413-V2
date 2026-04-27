@@ -100,6 +100,11 @@ export const TodoList = () => {
     return activeTab === 0 ? ownedTodos : assignedTodos;
   };
 
+  const handleTabChange = (index) => {
+    setActiveTab(index);
+    setSelectedIds(new Set());
+  };
+
   const toggleSelect = (todoId) => {
     const newSelected = new Set(selectedIds);
     if (newSelected.has(todoId)) {
@@ -193,7 +198,6 @@ export const TodoList = () => {
     }
   };
 
-  const currentTodos = getCurrentTodos();
   const hasSelected = selectedIds.size > 0;
 
   return (
@@ -216,7 +220,7 @@ export const TodoList = () => {
             variant="enclosed"
             colorScheme="green"
             index={activeTab}
-            onChange={setActiveTab}
+            onChange={handleTabChange}
           >
             <TabList mb={4}>
               <Tab fontWeight="medium">我创建的</Tab>
@@ -225,7 +229,7 @@ export const TodoList = () => {
 
             <TabPanels>
               <TabPanel p={0}>
-                {currentTodos.length === 0 ? (
+                {ownedTodos.length === 0 ? (
                   <Center py={8}>
                     <Text color="gray.500">暂无任务</Text>
                   </Center>
@@ -315,8 +319,8 @@ export const TodoList = () => {
                     <Box mb={3}>
                       <Checkbox
                         isChecked={
-                          selectedIds.size === currentTodos.length &&
-                          currentTodos.length > 0
+                          selectedIds.size === ownedTodos.length &&
+                          ownedTodos.length > 0
                         }
                         onChange={toggleSelectAll}
                         colorScheme="green"
@@ -325,7 +329,7 @@ export const TodoList = () => {
                       </Checkbox>
                     </Box>
 
-                    {currentTodos.map((todo) => (
+                    {ownedTodos.map((todo) => (
                       <TodoCard
                         todo={todo}
                         key={todo.todo_id}
@@ -339,7 +343,7 @@ export const TodoList = () => {
               </TabPanel>
 
               <TabPanel p={0}>
-                {currentTodos.length === 0 ? (
+                {assignedTodos.length === 0 ? (
                   <Center py={8}>
                     <Text color="gray.500">暂无分配给我的任务</Text>
                   </Center>
@@ -390,8 +394,8 @@ export const TodoList = () => {
                     <Box mb={3}>
                       <Checkbox
                         isChecked={
-                          selectedIds.size === currentTodos.length &&
-                          currentTodos.length > 0
+                          selectedIds.size === assignedTodos.length &&
+                          assignedTodos.length > 0
                         }
                         onChange={toggleSelectAll}
                         colorScheme="green"
@@ -400,7 +404,7 @@ export const TodoList = () => {
                       </Checkbox>
                     </Box>
 
-                    {currentTodos.map((todo) => (
+                    {assignedTodos.map((todo) => (
                       <TodoCard
                         todo={todo}
                         key={todo.todo_id}

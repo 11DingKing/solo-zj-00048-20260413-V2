@@ -41,6 +41,9 @@ export const AddUpdateTodoModal = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const { todoId } = useParams();
+
+  const inputBg = useColorModeValue("gray.300", "gray.600");
+
   const {
     handleSubmit,
     register,
@@ -140,7 +143,7 @@ export const AddUpdateTodoModal = ({
               <FormControl isInvalid={errors.title}>
                 <Input
                   placeholder="Todo Title...."
-                  background={useColorModeValue("gray.300", "gray.600")}
+                  background={inputBg}
                   type="text"
                   variant="filled"
                   size="lg"
@@ -166,7 +169,7 @@ export const AddUpdateTodoModal = ({
                 <Textarea
                   rows={5}
                   placeholder="Add description...."
-                  background={useColorModeValue("gray.300", "gray.600")}
+                  background={inputBg}
                   variant="filled"
                   size="lg"
                   mt={6}
@@ -191,7 +194,7 @@ export const AddUpdateTodoModal = ({
                 <FormLabel htmlFor="priority">Priority</FormLabel>
                 <Select
                   id="priority"
-                  background={useColorModeValue("gray.300", "gray.600")}
+                  background={inputBg}
                   size="lg"
                   {...register("priority")}
                 >
@@ -208,7 +211,7 @@ export const AddUpdateTodoModal = ({
                 <Input
                   id="due_date"
                   type="date"
-                  background={useColorModeValue("gray.300", "gray.600")}
+                  background={inputBg}
                   size="lg"
                   {...register("due_date")}
                 />
@@ -219,7 +222,7 @@ export const AddUpdateTodoModal = ({
                 <Select
                   id="assignee_id"
                   placeholder="Select assignee"
-                  background={useColorModeValue("gray.300", "gray.600")}
+                  background={inputBg}
                   size="lg"
                   {...register("assignee_id")}
                 >

@@ -31,6 +31,9 @@ export const ShareTodoModal = ({ todoId, onSuccess = () => {}, ...rest }) => {
   const [loadingShares, setLoadingShares] = useState(false);
   const [sharing, setSharing] = useState(false);
 
+  const inputBg = useColorModeValue("gray.300", "gray.600");
+  const shareItemBg = useColorModeValue("gray.200", "gray.700");
+
   const {
     handleSubmit,
     register,
@@ -140,7 +143,7 @@ export const ShareTodoModal = ({ todoId, onSuccess = () => {}, ...rest }) => {
                 <FormLabel>Share with (Email)</FormLabel>
                 <Input
                   placeholder="Enter user email..."
-                  background={useColorModeValue("gray.300", "gray.600")}
+                  background={inputBg}
                   type="email"
                   variant="filled"
                   size="lg"
@@ -182,7 +185,7 @@ export const ShareTodoModal = ({ todoId, onSuccess = () => {}, ...rest }) => {
                   {shares.map((share) => (
                     <HStack
                       key={share.share_id}
-                      bg={useColorModeValue("gray.200", "gray.700")}
+                      bg={shareItemBg}
                       p={2}
                       rounded="md"
                       justify="space-between"

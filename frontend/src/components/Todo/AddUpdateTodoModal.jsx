@@ -12,6 +12,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Stack,
   Switch,
   Textarea,
@@ -23,10 +24,18 @@ import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../../services/axios";
 
+const PRIORITY_OPTIONS = [
+  { value: "urgent", label: "Urgent" },
+  { value: "high", label: "High" },
+  { value: "normal", label: "Normal" },
+  { value: "low", label: "Low" },
+];
+
 export const AddUpdateTodoModal = ({
   editable = false,
   defaultValues = {},
   onSuccess = () => {},
+  users = [],
   ...rest
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,16 +46,37 @@ export const AddUpdateTodoModal = ({
     register,
     control,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm({
-    defaultValues: { ...defaultValues },
+    defaultValues: {
+      title: "",
+      description: "",
+      status: false,
+      priority: "normal",
+      due_date: "",
+      assignee_id: "",
+      ...defaultValues,
+    },
   });
 
   const onSubmit = async (values) => {
     try {
-      if (editable) {
-        await axiosInstance.put(`/todo/${todoId}`, values);
+      const payload = { ...values };
+      
+      if (payload.due_date) {
+        payload.due_date = new Date(payload.due_date).toISOString();
       } else {
-        await axiosInstance.post(`/todo/create/`, values);
+        delete payload.due_date;
+      }
+      
+      if (!payload.assignee_id) {
+        delete payload.assignee_id;
+      }
+
+      if (editable) {
+        await axiosInstance.put(`/todo/${todoId}`, payload);
+      } else {
+        await axiosInstance.post(`/todo/create/`, payload);
       }
       toast({
         title: editable ? "Todo Updated" : "Todo Added",
@@ -67,9 +97,31 @@ export const AddUpdateTodoModal = ({
     }
   };
 
+  const handleOpen = () => {
+    reset({
+      title: "",
+      description: "",
+      status: false,
+      priority: "normal",
+      due_date: "",
+      assignee_id: "",
+      ...defaultValues,
+    });
+    onOpen();
+  };
+
+  const formatDueDate = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <Box {...rest}>
-      <Button w="100%" colorScheme="green" onClick={onOpen}>
+      <Button w="100%" colorScheme="green" onClick={handleOpen}>
         {editable ? "UPDATE TODO" : "ADD TODO"}
       </Button>
       <Modal
@@ -109,6 +161,7 @@ export const AddUpdateTodoModal = ({
                   {errors.title && errors.title.message}
                 </FormErrorMessage>
               </FormControl>
+
               <FormControl isInvalid={errors.description}>
                 <Textarea
                   rows={5}
@@ -133,6 +186,51 @@ export const AddUpdateTodoModal = ({
                   {errors.description && errors.description.message}
                 </FormErrorMessage>
               </FormControl>
+
+              <FormControl mt={6}>
+                <FormLabel htmlFor="priority">Priority</FormLabel>
+                <Select
+                  id="priority"
+                  background={useColorModeValue("gray.300", "gray.600")}
+                  size="lg"
+                  {...register("priority")}
+                >
+                  {PRIORITY_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl mt={6}>
+                <FormLabel htmlFor="due_date">Due Date</FormLabel>
+                <Input
+                  id="due_date"
+                  type="date"
+                  background={useColorModeValue("gray.300", "gray.600")}
+                  size="lg"
+                  {...register("due_date")}
+                />
+              </FormControl>
+
+              <FormControl mt={6}>
+                <FormLabel htmlFor="assignee_id">Assign To</FormLabel>
+                <Select
+                  id="assignee_id"
+                  placeholder="Select assignee"
+                  background={useColorModeValue("gray.300", "gray.600")}
+                  size="lg"
+                  {...register("assignee_id")}
+                >
+                  {users.map((user) => (
+                    <option key={user.user_id} value={user.user_id}>
+                      {user.username} ({user.email})
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
               <Controller
                 control={control}
                 name="status"

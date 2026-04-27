@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: fodoist-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fodoist-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_CONNECTION_STRING=mongodb://mongodb:27017/
+      - JWT_SECRET_KEY=super_secret_key_for_jwt_fodoist_2024
+      - JWT_REFRESH_SECRET_KEY=super_secret_refresh_key_for_jwt_fodoist_2024
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fodoist-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

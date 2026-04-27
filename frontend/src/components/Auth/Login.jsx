@@ -23,6 +23,9 @@ export const Login = () => {
   const { login } = useAuth();
   const toast = useToast();
 
+  const formBg = useColorModeValue("gray.100", "gray.700");
+  const inputBg = useColorModeValue("gray.300", "gray.600");
+
   const onSubmit = async (values) => {
     try {
       await login(values.email, values.password);
@@ -40,7 +43,7 @@ export const Login = () => {
       <Flex
         direction="column"
         alignItems="center"
-        background={useColorModeValue("gray.100", "gray.700")}
+        background={formBg}
         p={12}
         rounded={6}
       >
@@ -49,7 +52,7 @@ export const Login = () => {
           <FormControl isInvalid={errors.email}>
             <Input
               placeholder="Email"
-              background={useColorModeValue("gray.300", "gray.600")}
+              background={inputBg}
               type="email"
               size="lg"
               mt={6}
@@ -64,7 +67,7 @@ export const Login = () => {
           <FormControl isInvalid={errors.email}>
             <Input
               placeholder="Password"
-              background={useColorModeValue("gray.300", "gray.600")}
+              background={inputBg}
               type="password"
               size="lg"
               mt={6}

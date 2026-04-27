@@ -22,6 +22,9 @@ export const Register = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const formBg = useColorModeValue("gray.100", "gray.700");
+  const inputBg = useColorModeValue("gray.300", "gray.600");
+
   const onSubmit = async (values) => {
     try {
       await axiosInstance.post("/users/create", values);
@@ -46,7 +49,7 @@ export const Register = () => {
       <Flex
         direction="column"
         alignItems="center"
-        background={useColorModeValue("gray.100", "gray.700")}
+        background={formBg}
         p={12}
         rounded={6}
       >
@@ -55,7 +58,7 @@ export const Register = () => {
           <FormControl isInvalid={errors.email}>
             <Input
               placeholder="Email"
-              background={useColorModeValue("gray.300", "gray.600")}
+              background={inputBg}
               type="email"
               size="lg"
               mt={6}
@@ -70,7 +73,7 @@ export const Register = () => {
           <FormControl isInvalid={errors.username}>
             <Input
               placeholder="username"
-              background={useColorModeValue("gray.300", "gray.600")}
+              background={inputBg}
               type="text"
               variant="filled"
               size="lg"
@@ -94,7 +97,7 @@ export const Register = () => {
           <FormControl isInvalid={errors.email}>
             <Input
               placeholder="Password"
-              background={useColorModeValue("gray.300", "gray.600")}
+              background={inputBg}
               type="password"
               size="lg"
               mt={6}

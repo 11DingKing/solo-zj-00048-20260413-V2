@@ -3,11 +3,45 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../services/axios";
 
+const SharedTodoCard = ({ share, cardBg }) => {
+  const navigate = useNavigate();
+
+  return (
+    <Flex
+      bg={cardBg}
+      minHeight="3rem"
+      my={3}
+      p={3}
+      rounded="lg"
+      alignItems="center"
+      justifyContent="space-between"
+      _hover={{
+        opacity: 0.9,
+        cursor: "pointer",
+        transform: "translateY(-3px)",
+      }}
+      onClick={() => navigate(`/shared/${share.todo_id}`, { replace: true })}
+    >
+      <Box>
+        <Text>{share.todo_title}</Text>
+        <Text fontSize="sm" color="gray.500">
+          Shared by: {share.owner_email}
+        </Text>
+      </Box>
+      <Badge colorScheme={share.todo_status ? "green" : "purple"}>
+        {share.todo_status ? "Complete" : "Pending"}
+      </Badge>
+    </Flex>
+  );
+};
+
 export const SharedTodoList = () => {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const isMounted = useRef(false);
   const navigate = useNavigate();
+
+  const cardBg = useColorModeValue("gray.300", "gray.600");
 
   useEffect(() => {
     if (isMounted.current) return;
@@ -28,36 +62,6 @@ export const SharedTodoList = () => {
       .finally(() => {
         setLoading(false);
       });
-  };
-
-  const SharedTodoCard = ({ share }) => {
-    return (
-      <Flex
-        bg={useColorModeValue("gray.300", "gray.600")}
-        minHeight="3rem"
-        my={3}
-        p={3}
-        rounded="lg"
-        alignItems="center"
-        justifyContent="space-between"
-        _hover={{
-          opacity: 0.9,
-          cursor: "pointer",
-          transform: "translateY(-3px)",
-        }}
-        onClick={() => navigate(`/shared/${share.todo_id}`, { replace: true })}
-      >
-        <Box>
-          <Text>{share.todo_title}</Text>
-          <Text fontSize="sm" color="gray.500">
-            Shared by: {share.owner_email}
-          </Text>
-        </Box>
-        <Badge colorScheme={share.todo_status ? "green" : "purple"}>
-          {share.todo_status ? "Complete" : "Pending"}
-        </Badge>
-      </Flex>
-    );
   };
 
   return (
@@ -83,7 +87,7 @@ export const SharedTodoList = () => {
             </Text>
           ) : (
             todos?.map((share) => (
-              <SharedTodoCard share={share} key={share.share_id} />
+              <SharedTodoCard share={share} key={share.share_id} cardBg={cardBg} />
             ))
           )}
         </Box>
